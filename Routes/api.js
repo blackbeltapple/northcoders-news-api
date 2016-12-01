@@ -36,4 +36,19 @@ apiRouter.get('/articles/:article_id/comments', function(req, res){
   });
 });
 
+// POST /api/articles/:article_id/comments
+// ```
+// Add a new comment to an article. This route requires a JSON body with a comment key and value pair
+// e.g: {"comment": "This is my new comment"}
+apiRouter.post('/articles/:article_id/comments', function(req, res){
+  var article = req.params.article_id;
+  var commentBody = req.body;
+  // console.log('you have requested comments for ' + article + '. Comment: ' + commentBody);
+  controllers.postComment(article, commentBody, function(error, data){
+    if (error) res.status(500).send(error);
+    res.send(data);
+  });
+});
+
+
 module.exports = apiRouter;
