@@ -50,5 +50,19 @@ apiRouter.post('/articles/:article_id/comments', function(req, res){
   });
 });
 
+// PUT /api/articles/:article_id
+// ```
+// Increment or Decrement the votes of an article by one. This route requires a vote query of 'up' or 'down'
+// e.g: /api/articles/:article_id?vote=up
+apiRouter.put('/articles/:article_id', function(req, res){
+  var article = req.params.article_id;
+  var query = req.query.vote;
+  console.log('**********', article, query);
+  // console.log('you have requested comments for ' + article + '. Comment: ' + commentBody);
+  controllers.articleVotes(article, query, function(error, data){
+    if (error) res.status(500).send(error);
+    res.send(data);
+  });
+});
 
 module.exports = apiRouter;

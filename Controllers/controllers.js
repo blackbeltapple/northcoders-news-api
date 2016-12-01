@@ -42,11 +42,23 @@ const postComment = function (article, comment, callback) {
   });
 }
 
+const articleVotes = function (article_id, upOrDown, callback) {
+  // 58402fcc631cf52f0f1362e0
+  var incNum;
+  if (upOrDown === 'up') incNum = 1
+  else if (upOrDown === 'down') incNum = -1;
+  articleDoc.findByIdAndUpdate(article_id, {$inc: {votes: incNum}}, {new: true}, function (error, data) {
+    if (error) return callback(error);
+    callback(null, data);
+  });
+}
+
 
 module.exports = {
   getAllTopics: getAllTopics,
   getArticlesForTopic: getArticlesForTopic,
   getArticles: getArticles,
   getCommentsForArticle: getCommentsForArticle,
-  postComment: postComment
+  postComment: postComment,
+  articleVotes: articleVotes
 }
