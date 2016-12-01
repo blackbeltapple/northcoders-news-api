@@ -20,6 +20,11 @@ mongoose.connect(db, function (err) {
 app.use(bodyParser.json());
 app.use('/api', apiRouter);
 
+app.use(function(err, req, res, next){
+  console.log(err.reason);
+  res.json({reason: 'NC News error'});
+});
+
 app.listen(PORT, function () {
   console.log(`listening on port ${PORT}`);
 });

@@ -27,11 +27,11 @@ apiRouter.get('/articles', function(req, res){
   });
 });
 
-apiRouter.get('/articles/:article_id/comments', function(req, res){
+apiRouter.get('/articles/:article_id/comments', function(req, res, next){
   var article = req.params.article_id;
   console.log('you have requested comments for ' + article);
   controllers.getCommentsForArticle(article, function(error, data){
-    if (error) res.status(500).send(error);
+    if (error) return next(error);
     res.send(data);
   });
 });
@@ -97,6 +97,7 @@ apiRouter.get('/users/:username', function(req, res){
     res.send(data);
   });
 });
+
 
 module.exports = apiRouter;
 
