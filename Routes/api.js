@@ -76,6 +76,28 @@ apiRouter.delete('/comments/:comment_id', function(req, res){
   });
 });
 
+//  get   users/
+
+apiRouter.get('/users/', function(req, res){
+  var user = req.params.user_id;
+  // console.log('you have requested all user details');
+  controllers.getUsers(function(error, data){
+    if (error) res.status(500).send(error);
+    res.send(data);
+  });
+});
+
+//  get   users/:username
+
+apiRouter.get('/users/:username', function(req, res){
+  var user = req.params.username;
+  // console.log('you have requested details of user ' + user);
+  controllers.getUser(user, function(error, data){
+    if (error) res.status(500).send(error);
+    res.send(data);
+  });
+});
+
 module.exports = apiRouter;
 
 

@@ -1,6 +1,7 @@
 const topicDoc = require ('../models/topics.js');
 const articleDoc = require ('../models/articles.js');
 const commentDoc = require ('../models/comments.js');
+const usersDoc = require ('../models/users.js');
 
 
 
@@ -60,6 +61,21 @@ const deleteCommment = function (comment_id, callback) {
   });
 }
 
+const getUsers = function (callback) {
+  usersDoc.find({}, function (error, data) {
+    if (error) return callback(error);
+    callback(null, data);
+  });
+}
+
+const getUser = function (user, callback) {
+  usersDoc.find({username: user}, function (error, data) {
+    if (error) return callback(error);
+    callback(null, data);
+  });
+}
+
+
 
 module.exports = {
   getAllTopics: getAllTopics,
@@ -68,5 +84,7 @@ module.exports = {
   getCommentsForArticle: getCommentsForArticle,
   postComment: postComment,
   articleVotes: articleVotes,
-  deleteComment: deleteCommment
+  deleteComment: deleteCommment,
+  getUsers: getUsers,
+  getUser: getUser
 }
