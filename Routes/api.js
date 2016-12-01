@@ -65,4 +65,17 @@ apiRouter.put('/articles/:article_id', function(req, res){
   });
 });
 
+//comments/:comment_id
+
+apiRouter.delete('/comments/:comment_id', function(req, res){
+  var comment = req.params.comment_id;
+  // console.log('you have requested deletion of comment- ' + comment);
+  controllers.deleteComment(comment, function(error, data){
+    if (error) res.status(500).send(error);
+    res.send(data);
+  });
+});
+
 module.exports = apiRouter;
+
+
