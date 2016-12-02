@@ -45,11 +45,12 @@ function saveArticles (cb) {
 function saveComments (articlesArray, cb) {
   // this gets articlesArray from the cb of the previous function (saveArticles)
   const articleId = articlesArray[0]._id;
+  // Save the id of the last article, then delete the article
+  // This will give us a valid but non-existanat article_id
   const non_articleId = articlesArray[2]._id;
-  // models.Articles.findByIdAndRemove(non_articleId, function (error, data) {
-  //   if (error) return callback(error);
-  //   callback(null, data);
-  // });
+  models.Articles.findByIdAndRemove(non_articleId, (error, data) => {
+    if (error) return cb(error);
+  });
   const comment = new models.Comments({body: 'this is a comment', belongs_to: articleId});
   const comment2 = new models.Comments({body: 'this is another comment', belongs_to: articleId, created_by: 'someone'});
   models.Comments.create([comment, comment2], err => {

@@ -132,7 +132,7 @@ describe('API Routes', function () {
     });
     xit('should return an error if article_id is not found', function (done) {
       request(ROOT)
-        .post(`/articles/${usefulIds.article_id}/comments`)
+        .post(`/articles/${usefulIds.nonexistant_article_id}/comments`)
         .send({body: 'test comment'})     // do a post, and the .send is the comment that you want to send!
         // .expect(200)
         .end(function (err, res) {
