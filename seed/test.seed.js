@@ -22,25 +22,27 @@ const user = new models.Users({
 function saveUser (cb) {
   user.save(err => {
     if (err) cb(err);
-    else cb();
+    else cb(null);
   });
 }
 
 function saveTopics (cb) {
   models.Topics.create(topics, (err) => {
     if (err) cb(err);
-    else cb();
+    else cb(null);
   })
 }
 
 function saveArticles (cb) {
   models.Articles.create(articles, (err, docs) => {
     if (err) cb(err);
+    // the following cb takes arg 'docs', which is what gets passed to next function in the waterfall (saveComments)
     else cb(null, docs);
   });
 }
 
 function saveComments (articlesArray, cb) {
+  // this gets articlesArray from the cb of the previous function (saveArticles)
   const articleId = articlesArray[0]._id;
   const comment = new models.Comments({body: 'this is a comment', belongs_to: articleId});
   const comment2 = new models.Comments({body: 'this is another comment', belongs_to: articleId, created_by: 'someone'});
