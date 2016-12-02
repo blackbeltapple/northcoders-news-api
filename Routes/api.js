@@ -1,36 +1,36 @@
 var express = require('express');
 var apiRouter = express.Router();
-var controllers = require('../Controllers/controllers')
+var controllers = require('../Controllers/controllers');
 
-apiRouter.get('/topics', function(req, res){
+apiRouter.get('/topics', function (req, res) {
   console.log('you have requested topics');
-  controllers.getAllTopics(function(error, data){
+  controllers.getAllTopics(function (error, data) {
     if (error) res.status(500).send(error);
     res.send(data);
   });
 });
 
-apiRouter.get('/topics/:topic_id/articles', function(req, res){
+apiRouter.get('/topics/:topic_id/articles', function (req, res) {
   var topic = req.params.topic_id;
   console.log('you have requested all articles for ' + topic);
-  controllers.getArticlesForTopic(topic, function(error, data){
+  controllers.getArticlesForTopic(topic, function (error, data) {
     if (error) res.status(500).send(error);
     res.send(data);
   });
 });
 
-apiRouter.get('/articles', function(req, res){
+apiRouter.get('/articles', function (req, res) {
   console.log('you have requested articles');
-  controllers.getArticles(function(error, data){
+  controllers.getArticles(function (error, data) {
     if (error) res.status(500).send(error);
     res.send(data);
   });
 });
 
-apiRouter.get('/articles/:article_id/comments', function(req, res, next){
+apiRouter.get('/articles/:article_id/comments', function (req, res, next) {
   var article = req.params.article_id;
   console.log('you have requested comments for ' + article);
-  controllers.getCommentsForArticle(article, function(error, data){
+  controllers.getCommentsForArticle(article, function (error, data) {
     if (error) return next(error);
     res.send(data);
   });
@@ -40,11 +40,13 @@ apiRouter.get('/articles/:article_id/comments', function(req, res, next){
 // ```
 // Add a new comment to an article. This route requires a JSON body with a comment key and value pair
 // e.g: {"comment": "This is my new comment"}
-apiRouter.post('/articles/:article_id/comments', function(req, res){
+apiRouter.post('/articles/:article_id/comments', function (req, res) {
   var article = req.params.article_id;
   var commentBody = req.body;
+  // In the router we should check that the request is valid
+  // if not got req.body.body then **RETURN  res.status 400 plus msg
   // console.log('you have requested comments for ' + article + '. Comment: ' + commentBody);
-  controllers.postComment(article, commentBody, function(error, data){
+  controllers.postComment(article, commentBody, function (error, data) {
     if (error) res.status(500).send(error);
     res.send(data);
   });
@@ -54,23 +56,21 @@ apiRouter.post('/articles/:article_id/comments', function(req, res){
 // ```
 // Increment or Decrement the votes of an article by one. This route requires a vote query of 'up' or 'down'
 // e.g: /api/articles/:article_id?vote=up
-apiRouter.put('/articles/:article_id', function(req, res){
+apiRouter.put('/articles/:article_id', function (req, res) {
   var article = req.params.article_id;
   var query = req.query.vote;
   console.log('**********', article, query);
   // console.log('you have requested comments for ' + article + '. Comment: ' + commentBody);
-  controllers.articleVotes(article, query, function(error, data){
+  controllers.articleVotes(article, query, function (error, data) {
     if (error) res.status(500).send(error);
     res.send(data);
   });
 });
 
-//comments/:comment_id
-
-apiRouter.delete('/comments/:comment_id', function(req, res){
+apiRouter.delete('/comments/:comment_id', function (req, res) {
   var comment = req.params.comment_id;
   // console.log('you have requested deletion of comment- ' + comment);
-  controllers.deleteComment(comment, function(error, data){
+  controllers.deleteComment(comment, function (error, data) {
     if (error) res.status(500).send(error);
     res.send(data);
   });
@@ -78,10 +78,8 @@ apiRouter.delete('/comments/:comment_id', function(req, res){
 
 //  get   users/
 
-apiRouter.get('/users/', function(req, res){
-  var user = req.params.user_id;
-  // console.log('you have requested all user details');
-  controllers.getUsers(function(error, data){
+apiRouter.get('/users/', function (req, res) {
+  controllers.getUsers(function (error, data) {
     if (error) res.status(500).send(error);
     res.send(data);
   });
@@ -89,16 +87,13 @@ apiRouter.get('/users/', function(req, res){
 
 //  get   users/:username
 
-apiRouter.get('/users/:username', function(req, res){
+apiRouter.get('/users/:username', function (req, res) {
   var user = req.params.username;
   // console.log('you have requested details of user ' + user);
-  controllers.getUser(user, function(error, data){
+  controllers.getUser(user, function (error, data) {
     if (error) res.status(500).send(error);
     res.send(data);
   });
 });
 
-
 module.exports = apiRouter;
-
-

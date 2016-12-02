@@ -52,7 +52,7 @@ describe('API Routes', function () {
           expect(res.body).to.be.an('array');
           expect(res.body.length).to.equal(3);
           expect(res.body[0].title).to.equal('Football');
-          res.body.map(function(element){
+          res.body.forEach(function(element){
             expect(element).to.have.all.keys('title', 'slug', '__v', '_id');
           })
           done();
@@ -101,19 +101,34 @@ describe('API Routes', function () {
     });
   });
 
-  describe('POST /api/articles/:article_id/comments', function () {
-    xit('should return status 200 and {status: OK}', function (done) {
+  describe('POST /api/articles/:article_id/comments (valid article, valid comment obj)', function () {
+    it('should return status 200 and {status: OK}', function (done) {
+      var tmpString = `/articles/${usefulIds.article_id}/comments`;
       request('http://localhost:3090/api')
-        .post('/articles/${usefulIds.article_id}/comments')//.post and .send work together. .post is saying you want to
-        .send({comment: 'test comment'})                   // do a post, and the .send is the body that you want to send!
+        .post(tmpString) //.post and .send work together. .post is saying you want to
+        .send({body: 'test comment', belongs_to: usefulIds.article_id })                   // do a post, and the .send is the body that you want to send!
         // .expect(200)
         .end(function (err, res) {
           if (err) throw err;
           expect(res.statusCode).to.equal(200);
-          expect(res.body.status).to.equal('OK');
           done();
         });
     });
+
+    // Should we be handling this error in our controller?
+    describe('POST /api/articles/:article_id/comments (valid article, invalid comment obj)', function () {
+      xit('should return status 500 ??', function (done) {
+        var tmpString = `/articles/${usefulIds.article_id}/comments`;
+        request('http://localhost:3090/api')
+          .post(tmpString) //.post and .send work together. .post is saying you want to
+          .send({comment: 'test comment' })                   // do a post, and the .send is the body that you want to send!
+          // .expect(200)
+          .end(function (err, res) {
+            if (err) throw err;
+            expect(res.statusCode).to.equal(400);
+            done();
+          });
+      });
   });
 
   after(function (done) {
@@ -121,4 +136,5 @@ describe('API Routes', function () {
     mongoose.connection.db.dropDatabase();
     done();
   });
+})
 })

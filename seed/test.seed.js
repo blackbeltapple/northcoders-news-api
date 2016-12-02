@@ -30,7 +30,7 @@ function saveTopics (cb) {
   models.Topics.create(topics, (err) => {
     if (err) cb(err);
     else cb(null);
-  })
+  });
 }
 
 function saveArticles (cb) {

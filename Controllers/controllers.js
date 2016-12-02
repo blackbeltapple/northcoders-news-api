@@ -1,47 +1,49 @@
-const topicDoc = require ('../models/topics.js');
-const articleDoc = require ('../models/articles.js');
-const commentDoc = require ('../models/comments.js');
-const usersDoc = require ('../models/users.js');
-
-
+const topicDoc = require('../models/topics.js');
+const articleDoc = require('../models/articles.js');
+const CommentDoc = require('../models/comments.js');
+const usersDoc = require('../models/users.js');
 
 const getAllTopics = function (callback) {
-  topicDoc.find({}, function(error, docs){
-    if (error) return callback(error);
-    callback(null, docs);
-  })
-}
-
-const getArticlesForTopic = function (topic, callback) {
-  articleDoc.find({belongs_to: topic}, function(error, docs){
-    if (error) return callback(error);
-    callback(null, docs);
-  })
-}
-
-const getArticles = function (callback) {
-  articleDoc.find(function(error, docs){
-    if (error) return callback(error);
-    callback(null, docs);
-  })
-}
-
-const getCommentsForArticle = function (article, callback) {
-  // 58402fcc631cf52f0f1362e0
-  commentDoc.find({belongs_to: article}, function(error, docs){
-    if (error) return callback(error);
-    callback(null, docs);
-  })
-}
-
-const postComment = function (article, comment, callback) {
-  // 58402fcc631cf52f0f1362e0
-  var newComment = new commentDoc(comment);
-  newComment.save(function (error, docs){
+  topicDoc.find({}, function (error, docs) {
     if (error) return callback(error);
     callback(null, docs);
   });
-}
+};
+
+const getArticlesForTopic = function (topic, callback) {
+  articleDoc.find({belongs_to: topic}, function (error, docs) {
+    if (error) return callback(error);
+    callback(null, docs);
+  });
+};
+
+const getArticles = function (callback) {
+  articleDoc.find(function (error, docs) {
+    if (error) return callback(error);
+    callback(null, docs);
+  });
+};
+
+const getCommentsForArticle = function (article, callback) {
+  // 58402fcc631cf52f0f1362e0
+  CommentDoc.find({belongs_to: article}, function (error, docs) {
+    if (error) return callback(error);
+    callback(null, docs);
+  });
+};
+
+const postComment = function (article, comment, callback) {
+  var newComment = new CommentDoc(comment);
+  // DB connection error is possible here
+  newComment.save(function (error, docs) {
+    if (error) {
+      // could customise the error msgs here and send back an obj that contain the error
+      callback(error);
+      return;
+    }
+    callback(null, docs);
+  });
+};
 
 const articleVotes = function (article_id, upOrDown, callback) {
   // 58402fcc631cf52f0f1362e0
@@ -52,30 +54,28 @@ const articleVotes = function (article_id, upOrDown, callback) {
     if (error) return callback(error);
     callback(null, data);
   });
-}
+};
 
 const deleteCommment = function (comment_id, callback) {
-  commentDoc.findByIdAndRemove(comment_id, function (error, data) {
+  CommentDoc.findByIdAndRemove(comment_id, function (error, data) {
     if (error) return callback(error);
     callback(null, data);
   });
-}
+};
 
 const getUsers = function (callback) {
   usersDoc.find({}, function (error, data) {
     if (error) return callback(error);
     callback(null, data);
   });
-}
+};
 
 const getUser = function (user, callback) {
   usersDoc.find({username: user}, function (error, data) {
     if (error) return callback(error);
     callback(null, data);
   });
-}
-
-
+};
 
 module.exports = {
   getAllTopics: getAllTopics,
@@ -87,4 +87,4 @@ module.exports = {
   deleteComment: deleteCommment,
   getUsers: getUsers,
   getUser: getUser
-}
+};
