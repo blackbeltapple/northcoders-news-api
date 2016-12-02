@@ -21,6 +21,13 @@ app.use(bodyParser.json());
 app.use('/api', apiRouter);
 
 app.use(function (err, req, res, next) {
+ if(err.name === 'CastError') {
+   res.status(500).json({error: {message: 'Northcoders News API: Invalid ID'}})
+   next();
+ }
+});
+
+app.use(function (err, req, res, next) {
   console.log(err.reason);
   res.json({reason: 'NC News error'});
 });
