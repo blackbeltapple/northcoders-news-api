@@ -31,7 +31,7 @@ describe('API Routes', function () {
       })
     })
   });
-  // This route isn't supported but will test
+  // This route isn't supported but will test that it returns 404
   describe('GET /api', function () {
     it('should return status 404', function (done) {
       request(ROOT)
@@ -39,14 +39,12 @@ describe('API Routes', function () {
         .expect(404)
         .end(function (err, res) {
           if (err) throw err;
-          // expect(res.statusCode).to.equal(200);
-          // expect(res.body.status).to.equal('OK');
           done();
         });
     });
   });
   describe('GET /api/topics', function () {
-    it('should return status 200 and body of topic', function (done) {
+    it('should return status 200, and correct body', function (done) {
       //      request('http://localhost:3090/api')  // this is equivalent to request(ROOT)
       request(ROOT)
         .get('/topics')
@@ -64,9 +62,8 @@ describe('API Routes', function () {
         });
     });
   });
-  describe('GET /api/topiks', function () {
-    it('should return status 404', function (done) {
-      //      request('http://localhost:3090/api')  // this is equivalent to request(ROOT)
+  describe('GET unhandled routes', function () {
+    it('/api/topiks should return status 404', function (done) {
       request(ROOT)
         .get('/topiks')
         .end(function (err, res) {
@@ -77,8 +74,7 @@ describe('API Routes', function () {
     });
   });
   describe('GET /api/topics/:topic_id/articles', function () {
-    it('should return status 200 and body with array of articles', function (done) {
-      //      request('http://localhost:3090/api')  // this is equivalent to request(ROOT)
+    it('should return status 200 and body containing array with 1 article', function (done) {
       request(ROOT)
         .get('/topics/cats/articles')
         .expect(200)
@@ -91,9 +87,8 @@ describe('API Routes', function () {
         });
     });
   });
-  describe('GET /api/topics/:(unknown)topic_id/articles', function () {
+  describe('GET /api/topics/:(unknown)topic_id/articles - known route but unknown param', function () {
     it('should return status 404', function (done) {
-      //      request('http://localhost:3090/api')  // this is equivalent to request(ROOT)
       request(ROOT)
         .get('/topics/ca/articles')
         .end(function (err, res) {
@@ -106,25 +101,27 @@ describe('API Routes', function () {
     });
   });
   describe('POST /api/articles/:article_id/comments (valid article, valid comment obj)', function () {
-    it('should return status 200 and {status: OK}', function (done) {
-      var tmpString = `/articles/${usefulIds.article_id}/comments`;
-      //      request('http://localhost:3090/api')  // this is equivalent to request(ROOT)
+    it('should post a comment to given article with username NC', function (done) {
       request(ROOT)
-        .post(tmpString) //.post and .send work together. .post is saying you want to
-        .send({body: 'test comment', belongs_to: usefulIds.article_id })                   // do a post, and the .send is the body that you want to send!
+        .post(`/articles/${usefulIds.article_id}/comments`)
+        .send({body: 'test comment'})     // do a post, and the .send is the comment that you want to send!
         // .expect(200)
         .end(function (err, res) {
           if (err) throw err;
           expect(res.statusCode).to.equal(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.all.keys('body', 'belongs_to', 'created_at', 'created_by', 'votes', '__v', '_id');
+          expect(res.body.body).to.equal('test comment');
+          expect(res.body.belongs_to).to.equal(`${usefulIds.article_id}`);
           done();
         });
     });
+
   })
   // Should we be handling this error in our controller?
   describe('POST /api/articles/:article_id/comments (valid article, invalid comment obj)', function () {
     xit('should return status 500 ??', function (done) {
       var tmpString = `/articles/${usefulIds.article_id}/comments`;
-      //      request('http://localhost:3090/api')  // this is equivalent to request(ROOT)
       request(ROOT)
         .post(tmpString) //.post and .send work together. .post is saying you want to
         .send({comment: 'test comment' })                   // do a post, and the .send is the body that you want to send!

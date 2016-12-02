@@ -42,11 +42,14 @@ apiRouter.get('/articles/:article_id/comments', function (req, res, next) {
 // e.g: {"comment": "This is my new comment"}
 apiRouter.post('/articles/:article_id/comments', function (req, res) {
   var article = req.params.article_id;
-  var commentBody = req.body;
+  var comment = {
+    body: req.body.body,
+    belongs_to: article
+  };
   // In the router we should check that the request is valid
   // if not got req.body.body then **RETURN  res.status 400 plus msg
   // console.log('you have requested comments for ' + article + '. Comment: ' + commentBody);
-  controllers.postComment(article, commentBody, function (error, data) {
+  controllers.postComment(article, comment, function (error, data) {
     if (error) res.status(500).send(error);
     res.send(data);
   });
