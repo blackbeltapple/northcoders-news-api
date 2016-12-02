@@ -2,6 +2,9 @@ var express = require('express');
 var apiRouter = express.Router();
 var controllers = require('../Controllers/controllers');
 
+// The reouter is responsible for intercepting the routes, and checking that the request is
+// valid before sending request through to controller (and subsequently to the DB)
+
 apiRouter.get('/topics', function (req, res) {
   console.log('you have requested topics');
   controllers.getAllTopics(function (error, data) {
@@ -36,10 +39,8 @@ apiRouter.get('/articles/:article_id/comments', function (req, res, next) {
   });
 });
 
-// POST /api/articles/:article_id/comments
-// ```
-// Add a new comment to an article. This route requires a JSON body with a comment key and value pair
-// e.g: {"comment": "This is my new comment"}
+// Add a new comment to an article. This route requires a JSON body with a body key and value pair
+// e.g: {"body": "This is my new comment"}. It adds the belongs_to key/val from the params
 apiRouter.post('/articles/:article_id/comments', function (req, res) {
   var article = req.params.article_id;
   var comment = {
@@ -47,8 +48,10 @@ apiRouter.post('/articles/:article_id/comments', function (req, res) {
     belongs_to: article
   };
   // In the router we should check that the request is valid
-  // if not got req.body.body then **RETURN  res.status 400 plus msg
-  // console.log('you have requested comments for ' + article + '. Comment: ' + commentBody);
+  if (!req.body.body || typeof req.body.body !== 'string') {
+    // if not got req.body.body then **RETURN  res.status 400 plus msg
+    return res.status(400).json({error: 'comment body must have a comment of type string'})
+  }
   controllers.postComment(article, comment, function (error, data) {
     if (error) res.status(500).send(error);
     res.send(data);

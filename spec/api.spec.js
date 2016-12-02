@@ -116,7 +116,33 @@ describe('API Routes', function () {
           done();
         });
     });
-
+    it('should return an error if do not pass a body with the comment', function (done) {
+      request(ROOT)
+        .post(`/articles/${usefulIds.article_id}/comments`)
+        .send({incorrectbody: 'test comment'})     // do a post, and the .send is the comment that you want to send!
+        // .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          expect(res.statusCode).to.equal(400);
+          // console.log(res.body.error);
+          // res.body.error is set by us in api router
+          expect(res.body.error).to.equal('comment body must have a comment of type string');
+          done();
+        });
+    });
+    xit('should return an error if article_id is not found', function (done) {
+      request(ROOT)
+        .post(`/articles/${usefulIds.article_id}/comments`)
+        .send({body: 'test comment'})     // do a post, and the .send is the comment that you want to send!
+        // .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          expect(res.statusCode).to.equal(400);
+          // res.body.error is set by us in api router
+          expect(res.body.error).to.equal('comment body must have a comment of type string');
+          done();
+        });
+    });
   })
   // Should we be handling this error in our controller?
   describe('POST /api/articles/:article_id/comments (valid article, invalid comment obj)', function () {
