@@ -134,7 +134,7 @@ describe('API Routes', function () {
     });
   });
   describe('GET /api/articles/:article_id/comments', function () {
-    it('should return status 200 and array of coments', function (done) {
+    it('should return status 200 and array of comments', function (done) {
       request(ROOT)
         .get(`/articles/${usefulIds.article_id}/comments`)
         .end(function (err, res) {
@@ -149,9 +149,21 @@ describe('API Routes', function () {
         });
     });
   });
+  describe('DELETE /comments/:comment_id', function () {
+    it('should return status 200 and deleted comment', function (done) {
+      request(ROOT)
+        .delete(`/comments/${usefulIds.comment_id}`)
+        .end(function (err, res) {
+          if (err) throw err;
+          expect(res.statusCode).to.equal(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.all.keys('body', 'belongs_to', 'votes', 'created_at', 'created_by', '__v', '_id');
+        })
+        done();
+    });
+  });
 
   // TDDO PUT '/articles/:article_id'
-  // TODO DELETE  '/comments/:comment_id'
   // TODO GET  '/users/'
   // TODO GET  '/users/:username'
   // TODO GET articles should also retreve the number of comments
