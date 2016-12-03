@@ -1,4 +1,4 @@
-/* eslint-env mocha describe, it, xit */
+/* eslint-env mocha, before, describe, it, xit */
 
 // The purpose of this test suite is to test that the API is behaving
 // correctly in terms of what it is sending back to the client. It is
@@ -42,11 +42,10 @@ describe('API Routes', function () {
     mongoose.connection.once('connected', function () {
       mongoose.connection.db.dropDatabase();
       saveTestData(function (idsObj) {
-        console.log('idsObj ', idsObj)
         usefulIds = idsObj;
         done();
-      })
-    })
+      });
+    });
   });
   // TODO GET articles should also retreve the number of comments
 
@@ -74,9 +73,9 @@ describe('API Routes', function () {
           expect(res.body).to.be.an('array');
           expect(res.body.length).to.equal(3);
           expect(res.body[0].title).to.equal('Football');
-          res.body.forEach(function(element){
+          res.body.forEach(function (element) {
             expect(element).to.have.all.keys('title', 'slug', '__v', '_id');
-          })
+          });
           done();
         });
     });
@@ -128,9 +127,9 @@ describe('API Routes', function () {
           expect(res.body).to.be.an('array');
           expect(res.body.length).to.equal(2);
           expect(res.body[0].title).to.equal('Cats are great');
-          res.body.forEach(function(element){
+          res.body.forEach(function (element) {
             expect(element).to.have.all.keys('title', 'body', 'belongs_to', 'votes', 'created_by', '__v', '_id');
-          })
+          });
           done();
         });
     });
@@ -144,9 +143,9 @@ describe('API Routes', function () {
           expect(res.statusCode).to.equal(200);
           expect(res.body).to.be.an('array');
           expect(res.body.length).to.equal(2);
-          res.body.forEach(function(element){
+          res.body.forEach(function (element) {
             expect(element).to.have.all.keys('body', 'belongs_to', 'votes', 'created_at', 'created_by', '__v', '_id');
-          })
+          });
           done();
         });
     });
@@ -160,8 +159,8 @@ describe('API Routes', function () {
           expect(res.statusCode).to.equal(200);
           expect(res.body).to.be.an('object');
           expect(res.body).to.have.all.keys('body', 'belongs_to', 'votes', 'created_at', 'created_by', '__v', '_id');
-        })
-        done();
+        });
+      done();
     });
   });
   describe('GET /api/users', function () {
@@ -175,9 +174,9 @@ describe('API Routes', function () {
           expect(res.body).to.be.an('array');
           expect(res.body.length).to.equal(1);
           expect(res.body[0].username).to.equal('northcoder');
-          res.body.forEach(function(element){
+          res.body.forEach(function (element) {
             expect(element).to.have.all.keys('username', 'name', 'avatar_url', '__v', '_id');
-          })
+          });
           done();
         });
     });
@@ -195,7 +194,7 @@ describe('API Routes', function () {
           expect(res.body[0].username).to.equal('northcoder');
           expect(res.body[0].name).to.equal('Awesome Northcoder');
           expect(res.body[0].avatar_url).to.equal('https://avatars3.githubusercontent.com/u/6791502?v=3&s=200');
-          res.body.forEach(function(element){
+          res.body.forEach(function (element) {
             expect(element).to.have.all.keys('username', 'name', 'avatar_url', '__v', '_id');
           });
           done();
@@ -243,7 +242,7 @@ describe('API Routes', function () {
           done();
         });
     });
-  })
+  });
 
   describe.only('PUT /api/comments/:comment_id', function () {
     it('should upvote a comment, and return the comment document', function (done) {
@@ -256,7 +255,7 @@ describe('API Routes', function () {
           expect(res.body).to.have.all.keys('body', 'belongs_to', 'created_at', 'created_by', 'votes', '__v', '_id');
           expect(res.body.votes).to.equal(1);
           done();
-      });
+        });
     });
     it('should downvote a comment, and return the comment document', function (done) {
       request(ROOT)
@@ -268,10 +267,7 @@ describe('API Routes', function () {
           expect(res.body).to.have.all.keys('body', 'belongs_to', 'created_at', 'created_by', 'votes', '__v', '_id');
           expect(res.body.votes).to.equal(0);
           done();
-      });
-    });
-    xit('should downvote a comment, and return the comment document', function (done) {
-
+        });
     });
     xit('should return an error if vote query is not up or down', function (done) {
       request(ROOT)
@@ -287,7 +283,7 @@ describe('API Routes', function () {
           done();
         });
     });
-  })
+  });
 
   describe('POST /api/articles/:article_id/comments (valid article, valid comment obj)', function () {
     it('should post a comment to given article with username NC', function (done) {
@@ -335,7 +331,7 @@ describe('API Routes', function () {
     xit('should return ??? TODO if article is valid but no req.body passed', function (done) {
       var tmpString = `/articles/${usefulIds.article_id}/comments`;
       request(ROOT)
-        .post(tmpString) //.post and .send work together. .post is saying you want to
+        .post(tmpString)      // .post and .send work together. .post is saying you want to
         .send()                   // do a post, and the .send is the body that you want to send!
         .end(function (err, res) {
           if (err) throw err;
@@ -343,10 +339,10 @@ describe('API Routes', function () {
           done();
         });
     });
-  })
+  });
   after(function (done) {
     // clear the DB
     mongoose.connection.db.dropDatabase();
     done();
   });
-})
+});
