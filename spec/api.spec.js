@@ -133,13 +133,28 @@ describe('API Routes', function () {
         });
     });
   });
+  describe('GET /api/articles/:article_id/comments', function () {
+    it('should return status 200 and array of coments', function (done) {
+      request(ROOT)
+        .get(`/articles/${usefulIds.article_id}/comments`)
+        .end(function (err, res) {
+          if (err) throw err;
+          expect(res.statusCode).to.equal(200);
+          expect(res.body).to.be.an('array');
+          expect(res.body.length).to.equal(2);
+          res.body.forEach(function(element){
+            expect(element).to.have.all.keys('body', 'belongs_to', 'votes', 'created_at', 'created_by', '__v', '_id');
+          })
+          done();
+        });
+    });
+  });
 
-  // TODO GET /articles
-  // TODO GET '/articles/:article_id/comments
   // TDDO PUT '/articles/:article_id'
   // TODO DELETE  '/comments/:comment_id'
   // TODO GET  '/users/'
   // TODO GET  '/users/:username'
+  // TODO GET articles should also retreve the number of comments
 
   describe('POST /api/articles/:article_id/comments (valid article, valid comment obj)', function () {
     it('should post a comment to given article with username NC', function (done) {
