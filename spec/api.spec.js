@@ -1,3 +1,5 @@
+/* eslint-env mocha describe, it, xit */
+
 // The purpose of this test suite is to test that the API is behaving
 // correctly in terms of what it is sending back to the client. It is
 // NOT to interrogate the database and check that items have been added
@@ -113,6 +115,25 @@ describe('API Routes', function () {
         });
     });
   });
+  describe('GET /api/articles', function () {
+    it('should return status 200 and array of articles', function (done) {
+      request(ROOT)
+        .get('/articles')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          expect(res.statusCode).to.equal(200);
+          expect(res.body).to.be.an('array');
+          expect(res.body.length).to.equal(2);
+          expect(res.body[0].title).to.equal('Cats are great');
+          res.body.forEach(function(element){
+            expect(element).to.have.all.keys('title', 'body', 'belongs_to', 'votes', 'created_by', '__v', '_id');
+          })
+          done();
+        });
+    });
+  });
+
   // TODO GET /articles
   // TODO GET '/articles/:article_id/comments
   // TDDO PUT '/articles/:article_id'

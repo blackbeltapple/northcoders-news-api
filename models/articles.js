@@ -8,7 +8,7 @@ var ArticleSchema = new Schema({
   },
   body: {
     type: String,
-    requied: true
+    required: true
   },
   belongs_to: {
     type: String,
@@ -21,7 +21,8 @@ var ArticleSchema = new Schema({
   },
   created_by: {
     type: String,
-    lowercase: true
+    required: true,
+    default: "J. R. Hartley"
   }
 });
 
