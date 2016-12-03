@@ -62,7 +62,7 @@ function saveComments (articlesArray, cb) {
   });
 }
 /*
-This waterfall code uses the async library which helps manag lots of async calls and callbacks.
+This waterfall code uses the asyn**c library which helps manag lots of async calls and callbacks.
 The waterfall basically takes an array of functions. These are executed in sequence, each passing its results
 to the next function as args. */
 function saveTestData (cb) {

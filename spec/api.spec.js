@@ -47,7 +47,7 @@ describe('API Routes', function () {
     })
   });
   // This route isn't supported but will test that it returns 404
-  describe('GET /api', function () {
+  describe('GET /api (ROOT)', function () {
     it('should return status 404', function (done) {
       request(ROOT)
         .get('/')
@@ -101,9 +101,7 @@ describe('API Routes', function () {
           done();
         });
     });
-  });
-  describe('GET /api/topics/:(unknown)topic_id/articles - known route but unknown param', function () {
-    it('should return status 404', function (done) {
+    it('should return status 404 for unknown topic', function (done) {
       request(ROOT)
         .get('/topics/ca/articles')
         .end(function (err, res) {
@@ -115,6 +113,13 @@ describe('API Routes', function () {
         });
     });
   });
+  // TODO GET /articles
+  // TODO GET '/articles/:article_id/comments
+  // TDDO PUT '/articles/:article_id'
+  // TODO DELETE  '/comments/:comment_id'
+  // TODO GET  '/users/'
+  // TODO GET  '/users/:username'
+
   describe('POST /api/articles/:article_id/comments (valid article, valid comment obj)', function () {
     it('should post a comment to given article with username NC', function (done) {
       request(ROOT)
@@ -145,7 +150,7 @@ describe('API Routes', function () {
           done();
         });
     });
-    xit('should return an error if article_id is not found', function (done) {
+    xit('should return an error if article_id is not found TODO', function (done) {
       request(ROOT)
         .post(`/articles/${usefulIds.nonexistant_article_id}/comments`)
         .send({body: 'test comment'})     // do a post, and the .send is the comment that you want to send!
@@ -158,22 +163,18 @@ describe('API Routes', function () {
           done();
         });
     });
-  })
-  // Should we be handling this error in our controller?
-  describe('POST /api/articles/:article_id/comments (valid article, invalid comment obj)', function () {
-    xit('should return status 500 ??', function (done) {
+    xit('should return ??? TODO if article is valid but no req.body passed', function (done) {
       var tmpString = `/articles/${usefulIds.article_id}/comments`;
       request(ROOT)
         .post(tmpString) //.post and .send work together. .post is saying you want to
-        .send({comment: 'test comment' })                   // do a post, and the .send is the body that you want to send!
-        // .expect(200)
+        .send()                   // do a post, and the .send is the body that you want to send!
         .end(function (err, res) {
           if (err) throw err;
           expect(res.statusCode).to.equal(400);
           done();
         });
     });
-  });
+  })
   after(function (done) {
     // clear the DB
     mongoose.connection.db.dropDatabase();
