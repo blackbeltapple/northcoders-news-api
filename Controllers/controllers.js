@@ -46,7 +46,6 @@ const postComment = function (article, comment, callback) {
 };
 
 const articleVotes = function (article_id, upOrDown, callback) {
-  // 58402fcc631cf52f0f1362e0
   var incNum;
   if (upOrDown === 'up') incNum = 1;
   else if (upOrDown === 'down') incNum = -1;
@@ -55,7 +54,15 @@ const articleVotes = function (article_id, upOrDown, callback) {
     callback(null, data);
   });
 };
-
+const commentVotes = function (comment_id, upOrDown, callback) {
+  var incNum;
+  if (upOrDown === 'up') incNum = 1;
+  else if (upOrDown === 'down') incNum = -1;
+  CommentDoc.findByIdAndUpdate(comment_id, {$inc: {votes: incNum}}, {new: true}, function (error, data) {
+    if (error) return callback(error);
+    callback(null, data);
+  });
+};
 const deleteCommment = function (comment_id, callback) {
   CommentDoc.findByIdAndRemove(comment_id, function (error, data) {
     if (error) return callback(error);
@@ -84,6 +91,7 @@ module.exports = {
   getCommentsForArticle: getCommentsForArticle,
   postComment: postComment,
   articleVotes: articleVotes,
+  commentVotes: commentVotes,
   deleteComment: deleteCommment,
   getUsers: getUsers,
   getUser: getUser

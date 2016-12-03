@@ -71,6 +71,16 @@ apiRouter.put('/articles/:article_id', function (req, res) {
   });
 });
 
+// Increment or Decrement the votes of a comment by one.
+apiRouter.put('/comments/:comment_id', function (req, res) {
+  var comment = req.params.comment_id;
+  var query = req.query.vote;
+  controllers.commentVotes(comment, query, function (error, data) {
+    if (error) res.status(500).send(error);
+    res.send(data);
+  });
+});
+
 apiRouter.delete('/comments/:comment_id', function (req, res) {
   var comment = req.params.comment_id;
   controllers.deleteComment(comment, function (error, data) {

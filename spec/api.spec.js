@@ -48,7 +48,6 @@ describe('API Routes', function () {
       })
     })
   });
-  // TDDO PUT '/comments/:comment_id'
   // TODO GET articles should also retreve the number of comments
 
   // This route isn't supported but will test that it returns 404
@@ -203,8 +202,6 @@ describe('API Routes', function () {
         });
     });
   });
-
-
   describe('PUT /api/articles/:article_id', function () {
     it('should upvote an article, and return the article document', function (done) {
       request(ROOT)
@@ -248,6 +245,49 @@ describe('API Routes', function () {
     });
   })
 
+  describe.only('PUT /api/comments/:comment_id', function () {
+    it('should upvote a comment, and return the comment document', function (done) {
+      request(ROOT)
+        .put(`/comments/${usefulIds.comment_id}?vote=up`)
+        .end(function (err, res) {
+          if (err) throw err;
+          expect(res.statusCode).to.equal(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.all.keys('body', 'belongs_to', 'created_at', 'created_by', 'votes', '__v', '_id');
+          expect(res.body.votes).to.equal(1);
+          done();
+      });
+    });
+    it('should downvote a comment, and return the comment document', function (done) {
+      request(ROOT)
+        .put(`/comments/${usefulIds.comment_id}?vote=down`)
+        .end(function (err, res) {
+          if (err) throw err;
+          expect(res.statusCode).to.equal(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.all.keys('body', 'belongs_to', 'created_at', 'created_by', 'votes', '__v', '_id');
+          expect(res.body.votes).to.equal(0);
+          done();
+      });
+    });
+    xit('should downvote a comment, and return the comment document', function (done) {
+
+    });
+    xit('should return an error if vote query is not up or down', function (done) {
+      request(ROOT)
+        .post(`/articles/${usefulIds.article_id}/comments`)
+        .send({incorrectbody: 'test comment'})     // do a post, and the .send is the comment that you want to send!
+        // .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          expect(res.statusCode).to.equal(400);
+          // console.log(res.body.error);
+          // res.body.error is set by us in api router
+          expect(res.body.error).to.equal('comment body must have a comment of type string');
+          done();
+        });
+    });
+  })
 
   describe('POST /api/articles/:article_id/comments (valid article, valid comment obj)', function () {
     it('should post a comment to given article with username NC', function (done) {
