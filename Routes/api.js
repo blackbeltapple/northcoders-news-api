@@ -3,10 +3,13 @@ var apiRouter = express.Router();
 var controllers = require('../Controllers/controllers');
 
 // The reouter is responsible for intercepting the routes, and checking that the request is
-// valid before sending request through to controller (and subsequently to the DB)
+// valid before sending request through to controller (and subsequently to the DB). If
+// request or body is not valid = don't send to DB. Can either do:
+// return res.status(400).json({error: 'comment body must have a comment of type string'})
+// or something like (pass errr to middleware)
+// return next({myconsistenterrorkeyname: 'meaningful error msg' })
 
 apiRouter.get('/topics', function (req, res) {
-  console.log('you have requested topics');
   controllers.getAllTopics(function (error, data) {
     if (error) res.status(500).send(error);
     res.send(data);
@@ -15,7 +18,6 @@ apiRouter.get('/topics', function (req, res) {
 
 apiRouter.get('/topics/:topic_id/articles', function (req, res) {
   var topic = req.params.topic_id;
-  console.log('you have requested all articles for ' + topic);
   controllers.getArticlesForTopic(topic, function (error, data) {
     if (error) res.status(500).send(error);
     res.send(data);
@@ -23,16 +25,16 @@ apiRouter.get('/topics/:topic_id/articles', function (req, res) {
 });
 
 apiRouter.get('/articles', function (req, res) {
-  console.log('you have requested articles');
   controllers.getArticles(function (error, data) {
     if (error) res.status(500).send(error);
     res.send(data);
   });
 });
 
+// TODO add the route /articles/:article_id here to help wit hte ASYNC stuff
+
 apiRouter.get('/articles/:article_id/comments', function (req, res, next) {
   var article = req.params.article_id;
-  console.log('you have requested comments for ' + article);
   controllers.getCommentsForArticle(article, function (error, data) {
     if (error) return next(error);
     res.send(data);
@@ -58,15 +60,11 @@ apiRouter.post('/articles/:article_id/comments', function (req, res) {
   });
 });
 
-// PUT /api/articles/:article_id
-// ```
 // Increment or Decrement the votes of an article by one. This route requires a vote query of 'up' or 'down'
 // e.g: /api/articles/:article_id?vote=up
 apiRouter.put('/articles/:article_id', function (req, res) {
   var article = req.params.article_id;
   var query = req.query.vote;
-  console.log('**********', article, query);
-  // console.log('you have requested comments for ' + article + '. Comment: ' + commentBody);
   controllers.articleVotes(article, query, function (error, data) {
     if (error) res.status(500).send(error);
     res.send(data);
@@ -75,14 +73,11 @@ apiRouter.put('/articles/:article_id', function (req, res) {
 
 apiRouter.delete('/comments/:comment_id', function (req, res) {
   var comment = req.params.comment_id;
-  // console.log('you have requested deletion of comment- ' + comment);
   controllers.deleteComment(comment, function (error, data) {
     if (error) res.status(500).send(error);
     res.send(data);
   });
 });
-
-//  get   users/
 
 apiRouter.get('/users/', function (req, res) {
   controllers.getUsers(function (error, data) {
@@ -90,8 +85,6 @@ apiRouter.get('/users/', function (req, res) {
     res.send(data);
   });
 });
-
-//  get   users/:username
 
 apiRouter.get('/users/:username', function (req, res) {
   var user = req.params.username;

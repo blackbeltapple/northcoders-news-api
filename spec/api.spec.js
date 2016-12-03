@@ -1,3 +1,18 @@
+// The purpose of this test suite is to test that the API is behaving
+// correctly in terms of what it is sending back to the client. It is
+// NOT to interrogate the database and check that items have been added
+// and deleted.  We are just testing that the RESPONSE is correct, i.e.
+// the status number,
+// the length of res.body,
+// the content of res.body,
+// that res.body contains the correct keys. We need to test that PUT and
+// POST requests return the new/editted data to the client - this
+// is convention. The client should receive the new full mongo document.
+// They may well need the _id that the DB created.
+// We can also test that the schemas are working correctly
+// I'm guessing there should be one describe block per route?
+// -------------------------------------------------------------
+
 // need to make sure our test file runs in TEST env models
 process.env.NODE_ENV = 'test';
 const PORT = require('../config.js').PORT[process.env.NODE_ENV];

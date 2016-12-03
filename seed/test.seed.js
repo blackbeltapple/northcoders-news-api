@@ -1,3 +1,5 @@
+// This file was given to us with the project
+
 const async = require('async');
 
 const models = require('../models/models');
@@ -53,12 +55,16 @@ function saveComments (articlesArray, cb) {
   });
   const comment = new models.Comments({body: 'this is a comment', belongs_to: articleId});
   const comment2 = new models.Comments({body: 'this is another comment', belongs_to: articleId, created_by: 'someone'});
+  // in the object below, we save a few useful ids that we will require during testing
   models.Comments.create([comment, comment2], err => {
     if (err) cb(err);
     else cb(null, {article_id: articleId, comment_id: comment._id, non_northcoder_comment: comment2._id, nonexistant_article_id: non_articleId });
   });
 }
-
+/*
+This waterfall code uses the async library which helps manag lots of async calls and callbacks.
+The waterfall basically takes an array of functions. These are executed in sequence, each passing its results
+to the next function as args. */
 function saveTestData (cb) {
   async.waterfall([saveUser, saveTopics, saveArticles, saveComments], (err, ids) => {
     if (err) console.log(err);
