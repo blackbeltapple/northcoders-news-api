@@ -181,7 +181,26 @@ describe('API Routes', function () {
         });
     });
   });
-
+  describe('GET /api/users/:username', function () {
+    it('should return status 200 and array containing single user object', function (done) {
+      request(ROOT)
+        .get(`/users/northcoder`)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          expect(res.statusCode).to.equal(200);
+          expect(res.body).to.be.an('array');
+          expect(res.body.length).to.equal(1);
+          expect(res.body[0].username).to.equal('northcoder');
+          expect(res.body[0].name).to.equal('Awesome Northcoder');
+          expect(res.body[0].avatar_url).to.equal('https://avatars3.githubusercontent.com/u/6791502?v=3&s=200');
+          res.body.forEach(function(element){
+            expect(element).to.have.all.keys('username', 'name', 'avatar_url', '__v', '_id');
+          });
+          done();
+        });
+    });
+  });
 
   // TDDO PUT '/articles/:article_id'
   // TODO GET  '/users/'
