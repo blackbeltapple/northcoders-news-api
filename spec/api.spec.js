@@ -48,6 +48,9 @@ describe('API Routes', function () {
       })
     })
   });
+  // TDDO PUT '/comments/:comment_id'
+  // TODO GET articles should also retreve the number of comments
+
   // This route isn't supported but will test that it returns 404
   describe('GET /api (ROOT)', function () {
     it('should return status 404', function (done) {
@@ -162,7 +165,6 @@ describe('API Routes', function () {
         done();
     });
   });
-
   describe('GET /api/users', function () {
     it('should return status 200 and array of users', function (done) {
       request(ROOT)
@@ -202,10 +204,50 @@ describe('API Routes', function () {
     });
   });
 
-  // TDDO PUT '/articles/:article_id'
-  // TODO GET  '/users/'
-  // TODO GET  '/users/:username'
-  // TODO GET articles should also retreve the number of comments
+
+  describe('PUT /api/articles/:article_id', function () {
+    it('should upvote an article, and return the article document', function (done) {
+      request(ROOT)
+        .put(`/articles/${usefulIds.article_id}?vote=up`)
+        .end(function (err, res) {
+          if (err) throw err;
+          expect(res.statusCode).to.equal(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body.title).to.equal('Cats are great');
+          expect(res.body).to.have.all.keys('title', 'body', 'belongs_to', 'votes', 'created_by', '__v', '_id');
+          expect(res.body.votes).to.equal(1);
+          done();
+        });
+    });
+    it('should downvote an article, and return the article document', function (done) {
+      request(ROOT)
+        .put(`/articles/${usefulIds.article_id}?vote=down`)
+        .end(function (err, res) {
+          if (err) throw err;
+          expect(res.statusCode).to.equal(200);
+          expect(res.body).to.be.an('object');
+          expect(res.body.title).to.equal('Cats are great');
+          expect(res.body).to.have.all.keys('title', 'body', 'belongs_to', 'votes', 'created_by', '__v', '_id');
+          expect(res.body.votes).to.equal(0);
+          done();
+        });
+    });
+    xit('should return an error if vote query is not up or down', function (done) {
+      request(ROOT)
+        .post(`/articles/${usefulIds.article_id}/comments`)
+        .send({incorrectbody: 'test comment'})     // do a post, and the .send is the comment that you want to send!
+        // .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          expect(res.statusCode).to.equal(400);
+          // console.log(res.body.error);
+          // res.body.error is set by us in api router
+          expect(res.body.error).to.equal('comment body must have a comment of type string');
+          done();
+        });
+    });
+  })
+
 
   describe('POST /api/articles/:article_id/comments (valid article, valid comment obj)', function () {
     it('should post a comment to given article with username NC', function (done) {
