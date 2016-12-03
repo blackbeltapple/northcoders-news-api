@@ -163,6 +163,26 @@ describe('API Routes', function () {
     });
   });
 
+  describe('GET /api/users', function () {
+    it('should return status 200 and array of users', function (done) {
+      request(ROOT)
+        .get('/users')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          expect(res.statusCode).to.equal(200);
+          expect(res.body).to.be.an('array');
+          expect(res.body.length).to.equal(1);
+          expect(res.body[0].username).to.equal('northcoder');
+          res.body.forEach(function(element){
+            expect(element).to.have.all.keys('username', 'name', 'avatar_url', '__v', '_id');
+          })
+          done();
+        });
+    });
+  });
+
+
   // TDDO PUT '/articles/:article_id'
   // TODO GET  '/users/'
   // TODO GET  '/users/:username'
