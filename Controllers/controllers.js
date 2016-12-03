@@ -45,26 +45,27 @@ const postComment = function (article, comment, callback) {
   });
 };
 
-const articleVotes = function (article_id, upOrDown, callback) {
+const articleVotes = function (articleId, upOrDown, callback) {
   var incNum;
   if (upOrDown === 'up') incNum = 1;
   else if (upOrDown === 'down') incNum = -1;
-  articleDoc.findByIdAndUpdate(article_id, {$inc: {votes: incNum}}, {new: true}, function (error, data) {
+  articleDoc.findByIdAndUpdate(articleId, {$inc: {votes: incNum}}, {new: true}, function (error, data) {
     if (error) return callback(error);
     callback(null, data);
   });
 };
-const commentVotes = function (comment_id, upOrDown, callback) {
+const commentVotes = function (commentId, upOrDown, callback) {
   var incNum;
   if (upOrDown === 'up') incNum = 1;
   else if (upOrDown === 'down') incNum = -1;
-  CommentDoc.findByIdAndUpdate(comment_id, {$inc: {votes: incNum}}, {new: true}, function (error, data) {
+  CommentDoc.findByIdAndUpdate(commentId, {$inc: {votes: incNum}}, {new: true}, function (error, data) {
     if (error) return callback(error);
     callback(null, data);
+    // console.log('data is ', data);
   });
 };
-const deleteCommment = function (comment_id, callback) {
-  CommentDoc.findByIdAndRemove(comment_id, function (error, data) {
+const deleteCommment = function (commentId, callback) {
+  CommentDoc.findByIdAndRemove(commentId, function (error, data) {
     if (error) return callback(error);
     callback(null, data);
   });

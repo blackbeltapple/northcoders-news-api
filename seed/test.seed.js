@@ -50,8 +50,8 @@ function saveComments (articlesArray, cb) {
   const articleId = articlesArray[0]._id;
   // Save the id of the last article, then delete the article
   // This will give us a valid but non-existanat article_id
-  const non_articleId = articlesArray[2]._id;
-  models.Articles.findByIdAndRemove(non_articleId, (error, data) => {
+  const nonArticleId = articlesArray[2]._id;
+  models.Articles.findByIdAndRemove(nonArticleId, (error, data) => {
     if (error) return cb(error);
   });
   const comment = new models.Comments({body: 'this is a comment', belongs_to: articleId});
@@ -59,7 +59,7 @@ function saveComments (articlesArray, cb) {
   // in the object below, we save a few useful ids that we will require during testing
   models.Comments.create([comment, comment2], err => {
     if (err) cb(err);
-    else cb(null, {article_id: articleId, comment_id: comment._id, non_northcoder_comment: comment2._id, nonexistant_article_id: non_articleId });
+    else cb(null, {article_id: articleId, comment_id: comment._id, non_northcoder_comment: comment2._id, nonexistant_article_id: nonArticleId});
   });
 }
 /*
