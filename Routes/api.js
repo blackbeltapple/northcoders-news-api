@@ -12,7 +12,7 @@ var controllers = require('../Controllers/controllers');
 apiRouter.get('/topics', function (req, res) {
   controllers.getAllTopics(function (error, data) {
     if (error) res.status(500).send(error);
-    res.send(data);
+    res.send({topics: data});
   });
 });
 

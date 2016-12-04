@@ -70,9 +70,9 @@ describe('API Routes', function () {
         .end(function (err, res) {
           if (err) throw err;
           expect(res.statusCode).to.equal(200);
-          expect(res.body).to.be.an('array');
-          expect(res.body.length).to.equal(3);
-          res.body.forEach(function (element) {
+          expect(res.body.topics).to.be.an('array');
+          expect(res.body.topics.length).to.equal(3);
+          res.body.topics.forEach(function (element) {
             expect(element).to.have.all.keys('title', 'slug', '__v', '_id');
           });
           done();
