@@ -107,7 +107,7 @@ apiRouter.get('/users/:username', function (req, res) {   // matches original NC
   // console.log('you have requested details of user ' + user);
   controllers.getUser(user, function (error, data) {
     if (error) res.status(500).send(error);
-    res.send(data);
+    res.send({users: data});
   });
 });
 

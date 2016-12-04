@@ -153,12 +153,12 @@ describe('API Routes', function () {
         .end(function (err, res) {
           if (err) throw err;
           expect(res.statusCode).to.equal(200);
-          expect(res.body).to.be.an('array');
-          expect(res.body.length).to.equal(1);
-          expect(res.body[0].username).to.equal('northcoder');
-          expect(res.body[0].name).to.equal('Awesome Northcoder');
-          expect(res.body[0].avatar_url).to.equal('https://avatars3.githubusercontent.com/u/6791502?v=3&s=200');
-          res.body.forEach(function (element) {
+          expect(res.body.users).to.be.an('array');
+          expect(res.body.users.length).to.equal(1);
+          expect(res.body.users[0].username).to.equal('northcoder');
+          expect(res.body.users[0].name).to.equal('Awesome Northcoder');
+          expect(res.body.users[0].avatar_url).to.equal('https://avatars3.githubusercontent.com/u/6791502?v=3&s=200');
+          res.body.users.forEach(function (element) {
             expect(element).to.have.all.keys('username', 'name', 'avatar_url', '__v', '_id');
           });
           done();
