@@ -46,13 +46,15 @@ apiRouter.get('/articles/:article_id/comments', function (req, res, next) { // m
 apiRouter.post('/articles/:article_id/comments', function (req, res) {   // matches original NC New API
   var article = req.params.article_id;
   var comment = {
-    body: req.body.body,
+    body: req.body.comment,
     belongs_to: article
   };
+  console.log(comment);
+
   // In the router we should check that the request is valid
-  if (!req.body.body || typeof req.body.body !== 'string') {
+  if (!req.body.comment || typeof req.body.comment !== 'string') {
     // if not got req.body.body then **RETURN  res.status 400 plus msg
-    return res.status(400).json({reason: 'comment body must have a comment of type string'});
+    return res.status(400).json({reason: 'comment body must have a comment key of type string'});
   }
   controllers.postComment(article, comment, function (error, data) {
     if (error) res.status(500).send(error);

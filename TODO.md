@@ -1,5 +1,5 @@
 QUESTIONS
-The original NC API behaves strangely for PUT api/comments/comment_id. It seems to work, but returns no content and an error 204. Compared to the article upvote/downvote - which returns the whole modified comment
+The original NC API behaves strangely for PUT api/comments/comment_id. It seems to work, but returns no content and a status 204. Compared to the article PUT equivalent upvote/downvote - which returns the whole modified comment
 
 
 COMPLETED
