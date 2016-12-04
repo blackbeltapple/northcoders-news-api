@@ -31,7 +31,6 @@ apiRouter.get('/articles', function (req, res) {   // matches original NC New AP
   });
 });
 
-// TODO add the route /articles/:article_id here to help wit hte ASYNC stuff
 
 apiRouter.get('/articles/:article_id/comments', function (req, res, next) { // matches original NC New API
   var article = req.params.article_id;

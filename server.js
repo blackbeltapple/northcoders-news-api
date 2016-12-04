@@ -1,6 +1,8 @@
 if (!process.env.NODE_ENV) process.env.NODE_ENV = 'dev';
 
 var express = require('express');
+var cors = require('cors');
+
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var app = express();
@@ -17,6 +19,13 @@ mongoose.connect(db, function (err) {
   }
 });
 
+// app.use(function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//   next();
+// });
+
+app.use(cors());
 app.use(bodyParser.json());
 app.use('/api', apiRouter);
 
@@ -27,6 +36,7 @@ app.use(function (err, req, res, next) {
  }
 });
 
+// The error-handling middleware should always be the last app.use before app.listen
 app.use(function (err, req, res, next) {
   console.log(err.reason);
   res.json({reason: 'NC News error'});
