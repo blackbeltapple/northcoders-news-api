@@ -49,7 +49,7 @@ describe('API Routes', function () {
   });
   // TODO GET articles should also retreve the number of comments
   // TODO params should handle uppercase and lowercase versions - NC news only handles lowercase!
-
+  // TODO should prevent comment deletion if name is not northcoders
 
   describe('GET /api/topics', function () {
     it('should return status 200, and correct body', function (done) {
@@ -135,10 +135,10 @@ describe('API Routes', function () {
         .end(function (err, res) {
           if (err) throw err;
           expect(res.statusCode).to.equal(200);
-          expect(res.body).to.be.an('array');
-          expect(res.body.length).to.equal(1);
-          expect(res.body[0].username).to.equal('northcoder');
-          res.body.forEach(function (element) {
+          expect(res.body.users).to.be.an('array');
+          expect(res.body.users.length).to.equal(1);
+          expect(res.body.users[0].username).to.equal('northcoder');
+          res.body.users.forEach(function (element) {
             expect(element).to.have.all.keys('username', 'name', 'avatar_url', '__v', '_id');
           });
           done();
@@ -198,8 +198,8 @@ describe('API Routes', function () {
         .end(function (err, res) {
           if (err) throw err;
           expect(res.statusCode).to.equal(400);
-          // res.body.error is set by us in api router
-          expect(res.body.error).to.equal('URL should include a query of \'vote=up\' or \'vote=down\'');
+          // res.body.reason is set by us in api router
+          expect(res.body.reason).to.equal('URL should include a query of \'vote=up\' or \'vote=down\'');
           done();
         });
     });
@@ -236,8 +236,8 @@ describe('API Routes', function () {
         .end(function (err, res) {
           if (err) throw err;
           expect(res.statusCode).to.equal(400);
-          // res.body.error is set by us in api router
-          expect(res.body.error).to.equal('URL should include a query of \'vote=up\' or \'vote=down\'');
+          // res.body.reason is set by us in api router
+          expect(res.body.reason).to.equal('URL should include a query of \'vote=up\' or \'vote=down\'');
           done();
         });
     });
@@ -251,10 +251,10 @@ describe('API Routes', function () {
         .end(function (err, res) {
           if (err) throw err;
           expect(res.statusCode).to.equal(200);
-          expect(res.body).to.be.an('object');
-          expect(res.body).to.have.all.keys('body', 'belongs_to', 'created_at', 'created_by', 'votes', '__v', '_id');
-          expect(res.body.body).to.equal('test comment');
-          expect(res.body.belongs_to).to.equal(`${usefulIds.article_id}`);
+          expect(res.body.comment).to.be.an('object');
+          expect(res.body.comment).to.have.all.keys('body', 'belongs_to', 'created_at', 'created_by', 'votes', '__v', '_id');
+          expect(res.body.comment.body).to.equal('test comment');
+          expect(res.body.comment.belongs_to).to.equal(`${usefulIds.article_id}`);
           done();
         });
     });
@@ -266,9 +266,9 @@ describe('API Routes', function () {
         .end(function (err, res) {
           if (err) throw err;
           expect(res.statusCode).to.equal(400);
-          // console.log(res.body.error);
-          // res.body.error is set by us in api router
-          expect(res.body.error).to.equal('comment body must have a comment of type string');
+          // console.log(res.body.reason);
+          // res.body.reason is set by us in api router
+          expect(res.body.reason).to.equal('comment body must have a comment of type string');
           done();
         });
     });
@@ -280,8 +280,8 @@ describe('API Routes', function () {
         .end(function (err, res) {
           if (err) throw err;
           expect(res.statusCode).to.equal(400);
-          // res.body.error is set by us in api router
-          expect(res.body.error).to.equal('comment body must have a comment of type string');
+          // res.body.reason is set by us in api router
+          expect(res.body.reason).to.equal('comment body must have a comment of type string');
           done();
         });
     });
