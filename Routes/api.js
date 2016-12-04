@@ -20,7 +20,7 @@ apiRouter.get('/topics/:topic_id/articles', function (req, res) {
   var topic = req.params.topic_id;
   controllers.getArticlesForTopic(topic, function (error, data) {
     if (error) res.status(500).send(error);
-    res.send(data);
+    res.send({articles: data});
   });
 });
 

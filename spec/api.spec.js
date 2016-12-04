@@ -48,20 +48,10 @@ describe('API Routes', function () {
     });
   });
   // TODO GET articles should also retreve the number of comments
+  // TODO params should handle uppercase and lowercase versions - NC news only handles lowercase!
 
-  // This route isn't supported but will test that it returns 404
-  describe('GET /api (ROOT)', function () {
-    it('should return status 404', function (done) {
-      request(ROOT)
-        .get('/')
-        .expect(404)
-        .end(function (err, res) {
-          if (err) throw err;
-          done();
-        });
-    });
-  });
-  describe('GET /api/topics', function () {
+
+  describe('GET /api/topics', function () {   // matches oriinal NC New API
     it('should return status 200, and correct body', function (done) {
       //      request('http://localhost:3090/api')  // this is equivalent to request(ROOT)
       request(ROOT)
@@ -79,17 +69,7 @@ describe('API Routes', function () {
         });
     });
   });
-  describe('GET unhandled routes', function () {
-    it('/api/topiks should return status 404', function (done) {
-      request(ROOT)
-        .get('/topiks')
-        .end(function (err, res) {
-          if (err) throw err;
-          expect(res.statusCode).to.equal(404);
-          done();
-        });
-    });
-  });
+
   describe('GET /api/topics/:topic_id/articles', function () {
     it('should return status 200 and body containing array with 1 article', function (done) {
       request(ROOT)
@@ -98,8 +78,8 @@ describe('API Routes', function () {
         .end(function (err, res) {
           if (err) throw err;
           expect(res.statusCode).to.equal(200);
-          expect(res.body).to.be.an('array');
-          expect(res.body.length).to.equal(1);
+          expect(res.body.articles).to.be.an('array');
+          expect(res.body.articles.length).to.equal(1);
           done();
         });
     });
@@ -109,8 +89,8 @@ describe('API Routes', function () {
         .end(function (err, res) {
           if (err) throw err;
           expect(res.statusCode).to.equal(200);
-          expect(res.body).to.be.an('array');
-          expect(res.body.length).to.equal(0);
+          expect(res.body.articles).to.be.an('array');
+          expect(res.body.articles.length).to.equal(0);
           done();
         });
     });
@@ -329,6 +309,29 @@ describe('API Routes', function () {
           expect(res.body).to.have.all.keys('body', 'belongs_to', 'votes', 'created_at', 'created_by', '__v', '_id');
         });
       done();
+    });
+  });
+  // This route isn't supported but will test that it returns 404
+  describe('GET /api (ROOT)', function () {
+    it('should return status 404', function (done) {
+      request(ROOT)
+        .get('/')
+        .expect(404)
+        .end(function (err, res) {
+          if (err) throw err;
+          done();
+        });
+    });
+  });
+  describe('GET unhandled routes', function () {
+    it('/api/topiks should return status 404', function (done) {
+      request(ROOT)
+        .get('/topiks')
+        .end(function (err, res) {
+          if (err) throw err;
+          expect(res.statusCode).to.equal(404);
+          done();
+        });
     });
   });
   after(function (done) {
