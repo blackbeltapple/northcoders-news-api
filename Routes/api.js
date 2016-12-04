@@ -49,8 +49,6 @@ apiRouter.post('/articles/:article_id/comments', function (req, res) {   // matc
     body: req.body.comment,
     belongs_to: article
   };
-  console.log(comment);
-
   // In the router we should check that the request is valid
   if (!req.body.comment || typeof req.body.comment !== 'string') {
     // if not got req.body.body then **RETURN  res.status 400 plus msg
@@ -106,7 +104,6 @@ apiRouter.get('/users/', function (req, res) {    // matches original NC New API
 
 apiRouter.get('/users/:username', function (req, res) {   // matches original NC New API
   var user = req.params.username;
-  // console.log('you have requested details of user ' + user);
   controllers.getUser(user, function (error, data) {
     if (error) res.status(500).send(error);
     res.send({users: data});

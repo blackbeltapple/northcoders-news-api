@@ -252,9 +252,9 @@ describe('API Routes', function () {
           if (err) throw err;
           expect(res.statusCode).to.equal(200);
           expect(res.body.comment).to.be.an('object');
-          // expect(res.body.comment).to.have.all.keys('body', 'belongs_to', 'created_at', 'created_by', 'votes', '__v', '_id');
-          // expect(res.body.comment.body).to.equal('test comment');
-          // expect(res.body.comment.belongs_to).to.equal(`${usefulIds.article_id}`);
+          expect(res.body.comment).to.have.all.keys('body', 'belongs_to', 'created_at', 'created_by', 'votes', '__v', '_id');
+          expect(res.body.comment.body).to.equal('test comment');
+          expect(res.body.comment.belongs_to).to.equal(`${usefulIds.article_id}`);
           done();
         });
     });

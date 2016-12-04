@@ -67,15 +67,13 @@ const commentVotes = function (commentId, upOrDown, callback) {
 const deleteCommment = function (commentId, callback) {
   // check that the created_by is 'northcoder'first - if not - do nothing
   CommentDoc.findById(commentId, function (error, data) {
-    console.log('created_by', data.created_by);
-    if (data.created_by !== 'northcoder') return;
+    if (error) return callback(error);
+    if (data.created_by !== 'northcoder') return callback({reason: 'Not authorised to delete this comment'});
     CommentDoc.findByIdAndRemove(commentId, function (error, data) {
       if (error) return callback(error);
       callback(null, data);
     });
-
   });
-
 };
 
 const getUsers = function (callback) {
