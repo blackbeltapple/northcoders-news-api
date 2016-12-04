@@ -9,14 +9,14 @@ var controllers = require('../Controllers/controllers');
 // or something like (pass errr to middleware)
 // return next({myconsistenterrorkeyname: 'meaningful error msg' })
 
-apiRouter.get('/topics', function (req, res) {
+apiRouter.get('/topics', function (req, res) {  // matches original NC New API
   controllers.getAllTopics(function (error, data) {
     if (error) res.status(500).send(error);
     res.send({topics: data});
   });
 });
 
-apiRouter.get('/topics/:topic_id/articles', function (req, res) {
+apiRouter.get('/topics/:topic_id/articles', function (req, res) { // matches original NC New API
   var topic = req.params.topic_id;
   controllers.getArticlesForTopic(topic, function (error, data) {
     if (error) res.status(500).send(error);
@@ -24,20 +24,20 @@ apiRouter.get('/topics/:topic_id/articles', function (req, res) {
   });
 });
 
-apiRouter.get('/articles', function (req, res) {
+apiRouter.get('/articles', function (req, res) {   // matches original NC New API
   controllers.getArticles(function (error, data) {
     if (error) res.status(500).send(error);
-    res.send(data);
+    res.send({articles: data});
   });
 });
 
 // TODO add the route /articles/:article_id here to help wit hte ASYNC stuff
 
-apiRouter.get('/articles/:article_id/comments', function (req, res, next) {
+apiRouter.get('/articles/:article_id/comments', function (req, res, next) { // matches original NC New API
   var article = req.params.article_id;
   controllers.getCommentsForArticle(article, function (error, data) {
     if (error) return next(error);
-    res.send(data);
+    res.send({comments: data});
   });
 });
 

@@ -51,9 +51,8 @@ describe('API Routes', function () {
   // TODO params should handle uppercase and lowercase versions - NC news only handles lowercase!
 
 
-  describe('GET /api/topics', function () {   // matches oriinal NC New API
+  describe('GET /api/topics', function () {
     it('should return status 200, and correct body', function (done) {
-      //      request('http://localhost:3090/api')  // this is equivalent to request(ROOT)
       request(ROOT)
         .get('/topics')
         .expect(200)
@@ -103,9 +102,9 @@ describe('API Routes', function () {
         .end(function (err, res) {
           if (err) throw err;
           expect(res.statusCode).to.equal(200);
-          expect(res.body).to.be.an('array');
-          expect(res.body.length).to.equal(2);
-          res.body.forEach(function (element) {
+          expect(res.body.articles).to.be.an('array');
+          expect(res.body.articles.length).to.equal(2);
+          res.body.articles.forEach(function (element) {
             expect(element).to.have.all.keys('title', 'body', 'belongs_to', 'votes', 'created_by', '__v', '_id');
           });
           done();
@@ -119,9 +118,9 @@ describe('API Routes', function () {
         .end(function (err, res) {
           if (err) throw err;
           expect(res.statusCode).to.equal(200);
-          expect(res.body).to.be.an('array');
-          expect(res.body.length).to.equal(2);
-          res.body.forEach(function (element) {
+          expect(res.body.comments).to.be.an('array');
+          expect(res.body.comments.length).to.equal(2);
+          res.body.comments.forEach(function (element) {
             expect(element).to.have.all.keys('body', 'belongs_to', 'votes', 'created_at', 'created_by', '__v', '_id');
           });
           done();
