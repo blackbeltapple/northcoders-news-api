@@ -47,9 +47,6 @@ describe('API Routes', function () {
       });
     });
   });
-  // TODO GET articles should also retreve the number of comments
-  // TODO params should handle uppercase and lowercase versions - NC news only handles lowercase!
-  // TODO should prevent comment deletion if name is not northcoders
 
   describe('GET /api/topics', function () {
     it('should return status 200, and correct body', function (done) {

@@ -82,6 +82,7 @@ apiRouter.put('/comments/:comment_id', function (req, res) {   // ?? cannot test
   }
   controllers.commentVotes(req.params.comment_id, req.query.vote, function (error, data) {
     if (error) res.status(500).send(error);
+    console.log(data)
     res.send(data);
   });
 });
