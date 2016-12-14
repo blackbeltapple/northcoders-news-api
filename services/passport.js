@@ -1,7 +1,7 @@
 // this is the setup for the passport library which handles Authentication
 // we set up a local strategy and a JWT strategy
-// The JWT strategy is used to manage the protection of certain routes - see if a user has a valid token???
-// The local strategy is used for user signIN. It check against the 'local' database????
+// The JWT strategy is used to manage the protection of certain routes - user can only access protected routes if authenticated
+// The local strategy is used for user signIN. It checks the passsword/username combo is the same as what is in the DB.
 
 // strategy constructor
 // set up the options fo rthe strategy
@@ -39,6 +39,9 @@ const LocalStrategy = require('passport-local');
 // //////////// JWT STRATEGY ////////////////////////////////////////////////////////
 // //////////////////////////////////////////////////////////////////////////////////
 
+// This assumes that the client sends the username and password in the body of the request.
+// You can change the options to get if from elsewhere if you are crazy
+
 // Setup options for JWT Strategy
 const jwtOptions = {
   secretOrKey: secret.secret,
@@ -50,7 +53,7 @@ const jwtLogin = new JwtStrategy(jwtOptions, function (payload, done) {
   // payload contains the decoded JWT token from the request
   // done is a callback function to signify success or failure of the authentication process, very similar to Express' next()
 
-  // Check if user ID in the payload exists in our database
+  // First, check if user ID in the payload exists in our database
   User.findById(payload.sub, function (err, user) {
     // if something goes wrong during searching for a user, call done with an error and no user (false)
     if (err) return done(err, false);
@@ -61,5 +64,33 @@ const jwtLogin = new JwtStrategy(jwtOptions, function (payload, done) {
   });
 });
 
+
+// //////////////////////////////////////////////////////////////////////////////////
+// //////////// LOCAL STRATEGY //////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////////
+
+// const localOptions = {
+//   usernameField: 'email'
+// };
+
+const localLogin = new LocalStrategy(function (username, password, done) {
+  // verify username and password
+  User.findOne({username}, function (err, user) {
+    if (err) return done(err, false);
+
+    if (!user) return done(null, false);
+
+    // compare passwords
+    user.comparePassword(password, function (err, isMatch) {
+      if (err) return done(err);
+      // if they don't, call done with false
+      if(!isMatch) return done(null, false);
+      // if they match, call done with user
+      return done(null, user);
+    });
+  });
+});
+
 // Tell passport to use this Strategy
 passport.use(jwtLogin);
+passport.use(localLogin);

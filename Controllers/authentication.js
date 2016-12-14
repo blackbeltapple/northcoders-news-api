@@ -11,6 +11,24 @@ function tokenForUser (user) {
   }, configSecret.secret);
 }
 
+// In here we are going to check if the user is valid and if so, give them a token.
+// The user is sending username and password via the req.body
+//   check that the user exists in DB
+//    check that the user sent password matches the one in the db
+function signin (req, res, next) {
+  // res.send({msg: "hi"})
+  // User has already been authenticated
+  // Passport puts the user under the request object. NICE!
+  // Send JWT and user info
+  const {username, name, avatar_url} = req.user;
+  res.send({
+    token: tokenForUser(req.user),
+    user: {username, name, avatar_url}
+  });
+}
+
+// eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1ODUxNzhlYzAzNDI5YTcxYzhhNGNlYzUiLCJpYXQiOjE0ODE3MzYzODkzNjV9.4vKiVDC-1oKJ1A7dlLgBtF4C2gBj0BnE0zefrb7pAJg
+
 function signup (req, res, next) {
   // this function will receive req.body containing username and password
   var username = req.body.username;
@@ -52,5 +70,6 @@ function signup (req, res, next) {
 }
 
 module.exports = {
-  signup: signup
+  signup: signup,
+  signin: signin
 };

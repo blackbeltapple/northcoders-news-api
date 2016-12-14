@@ -35,10 +35,10 @@ app.use(bodyParser.json());
 // api routes
 app.use('/api', apiRouter);
 
-// authentication routes
+// authentication routes - signup for new users, signin for existing
+const requireSignin = passport.authenticate('local', {session: false});
 app.post('/signup', Authentication.signup);
-// app.post('/signin', requireSignin, Authentication.signin);
-
+app.post('/signin', requireSignin, Authentication.signin);
 
 app.use(function (err, req, res, next) {
  if(err.name === 'CastError') {
