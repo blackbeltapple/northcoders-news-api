@@ -36,7 +36,6 @@ UserSchema.pre('save', function (next) {
     if (err) { return next(err); }
     // hash (encrypt) our password using the salt (this.password)
     bcrypt.hash(user.password, salt, null, function (err, hashedPassword) {
-      console.log('salt')
       if (err) { return next(err); }
       // overwrite plain text password with newly encrypted password
       user.password = hashedPassword;

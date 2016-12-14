@@ -1,4 +1,15 @@
 const User = require('../models/users');
+var configSecret = require('../config.secret');  // a secret config file - in gitignore - do not share
+const jwt = require('jwt-simple');
+
+// this is a function to create a JWT token for the user
+function tokenForUser (user) {
+  const timestamp = new Date().getTime();
+  return jwt.encode({
+    sub: user.id,
+    iat: timestamp
+  }, configSecret.secret);
+}
 
 function signup (req, res, next) {
   // this function will receive req.body containing username and password
@@ -21,15 +32,14 @@ function signup (req, res, next) {
       // 422 = unprocessable entity
       return res.status(422).send({error: 'Username is in use'});
     }
-    // if doesn't exist, create, save and respond OK
+    // if doesn't exist, create, save and respond OK.
+    // after the save function you only need return certain parts of the user doc to the client
     const user = new User({username, name, password});
     const avatar_url = user.avatar_url;
     user.save(function (err) {
-
       if (err) return next(err);
-      console.log('here', err);
       return res.json({
-        // token: tokenForUser(user),
+        token: tokenForUser(user),
         user: {
           username: username,
           name: name,

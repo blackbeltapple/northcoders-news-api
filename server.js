@@ -2,7 +2,6 @@ if (!process.env.NODE_ENV) process.env.NODE_ENV = 'dev';
 
 var express = require('express');
 var cors = require('cors');
-
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var app = express();
