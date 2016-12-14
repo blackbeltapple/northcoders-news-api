@@ -10,6 +10,7 @@ var config = require('./config');
 var db = config.DB[process.env.NODE_ENV] || process.env.DB;
 var PORT = config.PORT[process.env.NODE_ENV] || process.env.PORT;
 var apiRouter = require('./Routes/api.js');
+var Authentication = require('./Controllers/authentication');
 
 mongoose.connect(db, function (err) {
   if (!err) {
@@ -28,6 +29,9 @@ mongoose.connect(db, function (err) {
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/api', apiRouter);
+
+// authentication routes
+app.post('/signup', Authentication.signup);
 
 app.use(function (err, req, res, next) {
  if(err.name === 'CastError') {
