@@ -4,6 +4,7 @@ var controllers = require('../Controllers/controllers');
 var passport = require('passport');
 require('../services/passport');
 
+// set up te authentication and use in the required routes below
 const requireAuth = passport.authenticate('jwt', {session: false});
 
 // The reouter is responsible for intercepting the routes, and checking that the request is
@@ -13,7 +14,7 @@ const requireAuth = passport.authenticate('jwt', {session: false});
 // or something like (pass errr to middleware)
 // return next({myconsistenterrorkeyname: 'meaningful error msg' })
 
-// To protect all the routes on this router
+// To protect all the routes on this router you could do - but we want to expose the GET routes
 // apiRouter.use(requireAuth);
 
 apiRouter.get('/topics', requireAuth, function (req, res) {  // matches original NC New API
