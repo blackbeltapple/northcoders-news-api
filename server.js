@@ -10,6 +10,10 @@ var db = config.DB[process.env.NODE_ENV] || process.env.DB;
 var PORT = config.PORT[process.env.NODE_ENV] || process.env.PORT;
 var apiRouter = require('./Routes/api.js');
 var Authentication = require('./Controllers/authentication');
+var passport = require('passport');
+const morgan = require('morgan');
+
+require('./services/passport'); // this will execute this file to set up the passport strategy
 
 mongoose.connect(db, function (err) {
   if (!err) {
@@ -18,19 +22,24 @@ mongoose.connect(db, function (err) {
     console.log(`error connecting to the Database ${err}`);
   }
 });
-
 // app.use(function(req, res, next) {
 //   res.header("Access-Control-Allow-Origin", "*");
 //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 //   next();
 // });
-
+// This is the equivalent of using CORS below - I think ??
 app.use(cors());
+app.use(morgan('dev'));
 app.use(bodyParser.json());
+
+// api routes
 app.use('/api', apiRouter);
 
 // authentication routes
+// const requireSignin = passport.authenticate('local', {session: false});
 app.post('/signup', Authentication.signup);
+// app.post('/signin', requireSignin, Authentication.signin);
+
 
 app.use(function (err, req, res, next) {
  if(err.name === 'CastError') {
