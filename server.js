@@ -14,7 +14,7 @@ var passport = require('passport');
 const morgan = require('morgan');
 
 require('./services/passport'); // this will execute this file to set up the passport strategy
-
+// Authentication complete
 mongoose.connect(db, function (err) {
   if (!err) {
     console.log(`connected to the Database: ${db}`);
