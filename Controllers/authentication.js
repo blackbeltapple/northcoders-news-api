@@ -1,5 +1,4 @@
-const User = require('../models/user');
-
+const User = require('../models/users');
 
 function signup (req, res, next) {
   // this function will receive req.body containing username and password
@@ -24,18 +23,24 @@ function signup (req, res, next) {
     }
     // if doesn't exist, create, save and respond OK
     const user = new User({username, name, password});
-    const {avatar_url} = user;
-    user.save((err) => {
+    const avatar_url = user.avatar_url;
+    user.save(function (err) {
+
       if (err) return next(err);
+      console.log('here', err);
       return res.json({
-        token: tokenForUser(user),
-        user: {username, name, avatar_url}
+        // token: tokenForUser(user),
+        user: {
+          username: username,
+          name: name,
+          avatar_url: avatar_url
+        }
       });
     });
-  });
 
-};
+  });
+}
 
 module.exports = {
   signup: signup
-}
+};
