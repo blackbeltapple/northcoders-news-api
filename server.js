@@ -28,15 +28,14 @@ mongoose.connect(db, function (err) {
 //   next();
 // });
 // This is the equivalent of using CORS below - I think ??
-app.use(cors());
 app.use(morgan('dev'));
+app.use(cors());
 app.use(bodyParser.json());
 
 // api routes
 app.use('/api', apiRouter);
 
 // authentication routes
-// const requireSignin = passport.authenticate('local', {session: false});
 app.post('/signup', Authentication.signup);
 // app.post('/signin', requireSignin, Authentication.signin);
 

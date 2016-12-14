@@ -1,6 +1,10 @@
 var express = require('express');
 var apiRouter = express.Router();
 var controllers = require('../Controllers/controllers');
+var passport = require('passport');
+require('../services/passport');
+
+const requireAuth = passport.authenticate('jwt', {session: false});
 
 // The reouter is responsible for intercepting the routes, and checking that the request is
 // valid before sending request through to controller (and subsequently to the DB). If
@@ -9,7 +13,11 @@ var controllers = require('../Controllers/controllers');
 // or something like (pass errr to middleware)
 // return next({myconsistenterrorkeyname: 'meaningful error msg' })
 
-apiRouter.get('/topics', function (req, res) {  // matches original NC New API
+// To protect all the routes on this router
+// apiRouter.use(requireAuth);
+
+apiRouter.get('/topics', requireAuth, function (req, res) {  // matches original NC New API
+  console.log('here------------------------');
   controllers.getAllTopics(function (error, data) {
     if (error) res.status(500).send(error);
     res.send({topics: data});
@@ -24,6 +32,7 @@ apiRouter.get('/topics/:topic_id/articles', function (req, res) { // matches ori
   });
 });
 
+// trying authentication on this route only
 apiRouter.get('/articles', function (req, res) {   // matches original NC New API
   controllers.getArticles(function (error, data) {
     if (error) res.status(500).send(error);
